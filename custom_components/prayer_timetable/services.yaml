@@ -1,0 +1,10 @@
+export_csv:
+  fields:
+    entry_id:
+      required: true
+      selector:
+        text:
+    output_path:
+      required: true
+      selector:
+        text:

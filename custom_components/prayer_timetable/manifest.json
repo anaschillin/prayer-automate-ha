@@ -1,0 +1,11 @@
+{
+  "domain": "prayer_timetable",
+  "name": "Prayer Timetable",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/custom-components/prayer_timetable",
+  "iot_class": "local_polling",
+  "requirements": ["pdfplumber>=0.11.4"],
+  "version": "0.1.0"
+}

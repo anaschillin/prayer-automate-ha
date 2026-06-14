@@ -1,0 +1,37 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Prayer Timetable",
+        "description": "Load prayer times from a local PDF timetable.",
+        "data": {
+          "name": "Name",
+          "pdf_path": "PDF path",
+          "year": "Year",
+          "month": "Month",
+          "date_format": "Date format"
+        }
+      }
+    },
+    "error": {
+      "cannot_parse": "Could not parse prayer rows from the PDF.",
+      "file_not_found": "The PDF file could not be found.",
+      "invalid_month": "Month must be a number or English month name."
+    },
+    "abort": {
+      "already_configured": "This PDF path is already configured."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "fajr": {"name": "Fajr"},
+      "dhuhr": {"name": "Dhuhr"},
+      "asr": {"name": "Asr"},
+      "maghrib": {"name": "Maghrib"},
+      "isha": {"name": "Isha"},
+      "next_prayer": {"name": "Next prayer"},
+      "next_prayer_time": {"name": "Next prayer time"},
+      "row_count": {"name": "Rows parsed"}
+    }
+  }
+}
