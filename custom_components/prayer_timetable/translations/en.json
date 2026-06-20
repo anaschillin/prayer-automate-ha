@@ -16,6 +16,7 @@
     "error": {
       "cannot_parse": "Could not parse prayer rows from the PDF.",
       "file_not_found": "The PDF file could not be found.",
+      "invalid_year": "Year must be a number.",
       "invalid_month": "Month must be a number or English month name."
     },
     "abort": {

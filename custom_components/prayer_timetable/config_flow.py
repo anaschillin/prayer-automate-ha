@@ -45,6 +45,12 @@ class PrayerTimetableConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data = dict(user_input)
             data[CONF_PDF_PATH] = str(Path(data[CONF_PDF_PATH]).expanduser())
 
+            if year := data.get(CONF_YEAR):
+                try:
+                    data[CONF_YEAR] = int(year)
+                except (TypeError, ValueError):
+                    errors[CONF_YEAR] = "invalid_year"
+
             if month := data.get(CONF_MONTH):
                 try:
                     data[CONF_MONTH] = month_number(str(month))
@@ -78,8 +84,11 @@ def _user_schema(user_input: dict[str, Any] | None) -> vol.Schema:
         {
             vol.Optional(CONF_NAME, default=user_input.get(CONF_NAME, DEFAULT_NAME)): str,
             vol.Required(CONF_PDF_PATH, default=user_input.get(CONF_PDF_PATH, "")): str,
-            vol.Optional(CONF_YEAR, default=user_input.get(CONF_YEAR)): vol.Any(None, vol.Coerce(int)),
-            vol.Optional(CONF_MONTH, default=user_input.get(CONF_MONTH)): vol.Any(None, str, vol.Coerce(int)),
+            # Config-flow schemas are serialized for the frontend.  Keep these
+            # inputs as strings and normalize them in async_step_user because
+            # voluptuous Any/Coerce validators cannot be serialized.
+            vol.Optional(CONF_YEAR, default=user_input.get(CONF_YEAR, "")): str,
+            vol.Optional(CONF_MONTH, default=user_input.get(CONF_MONTH, "")): str,
             vol.Optional(CONF_DATE_FORMAT, default=user_input.get(CONF_DATE_FORMAT, "")): str,
         }
     )
