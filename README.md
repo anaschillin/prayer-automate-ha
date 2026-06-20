@@ -1,48 +1,106 @@
-# Prayer Automate
+# Prayer Timetable for Home Assistant
 
-Extract the five daily prayer times from a PDF timetable and write them to CSV.
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-41BDF5.svg)](https://github.com/hacs/integration)
+[![Hassfest](https://github.com/haffi96/prayer-automate-ha/actions/workflows/hassfest.yml/badge.svg)](https://github.com/haffi96/prayer-automate-ha/actions/workflows/hassfest.yml)
+[![HACS validation](https://github.com/haffi96/prayer-automate-ha/actions/workflows/hacs.yml/badge.svg)](https://github.com/haffi96/prayer-automate-ha/actions/workflows/hacs.yml)
+[![Latest release](https://img.shields.io/github/v/release/haffi96/prayer-automate-ha)](https://github.com/haffi96/prayer-automate-ha/releases)
 
-## Usage
+Prayer Timetable is a custom Home Assistant integration that extracts daily Fajr, Dhuhr, Asr, Maghrib, and Isha times from a PDF timetable. It creates timestamp sensors for each prayer, identifies the next prayer, and can export parsed rows as CSV.
 
-```bash
-uv run prayer-extract timetable.pdf prayer-times.csv
+> [!NOTE]
+> This is a community custom integration. It is not an official Home Assistant integration.
+
+## Installation
+
+### HACS (recommended)
+
+[![Open this repository in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=haffi96&repository=prayer-automate-ha&category=integration)
+
+1. Open **HACS** in Home Assistant.
+2. Open the three-dot menu, select **Custom repositories**, and add `https://github.com/haffi96/prayer-automate-ha` as an **Integration**.
+3. Search for **Prayer Timetable** and select **Download**.
+4. Restart Home Assistant.
+
+### Manual installation
+
+1. Download this repository.
+2. Copy `custom_components/prayer_timetable` to your Home Assistant configuration directory under `custom_components/prayer_timetable`.
+3. Restart Home Assistant.
+
+## Setup
+
+1. Open **Settings → Devices & services → Add integration**.
+2. Search for **Prayer Timetable**.
+3. Choose one PDF source:
+   - **Upload PDF** uploads a timetable from your browser and stores it at `/config/prayer_timetable/`.
+   - **PDF path** is for a timetable already accessible inside the Home Assistant runtime, for example `/config/prayer_timetable/oxford.pdf`.
+4. Optionally set **Year** and **Month** when rows contain only a day number, for example `2026` and `March`.
+5. Optionally set **Date format** for unusual date strings, using Python `strptime` syntax such as `%d %B %Y`.
+
+Paths from the machine where you run a browser or development shell are not automatically available in Home Assistant containers. Use **Upload PDF** or a path mounted into Home Assistant, normally under `/config`.
+
+## Entities
+
+The integration creates these sensors:
+
+- Fajr, Dhuhr, Asr, Maghrib, and Isha — timestamp sensors
+- Next prayer — the name of the next prayer today
+- Next prayer time — timestamp sensor for the next prayer today
+- Rows parsed — diagnostic count of parsed timetable rows
+
+## Export parsed rows
+
+Use the `prayer_timetable.export_csv` action to write the currently configured timetable to a CSV file.
+
+```yaml
+action: prayer_timetable.export_csv
+data:
+  entry_id: YOUR_CONFIG_ENTRY_ID
+  output_path: /config/prayer_timetable/prayer-times.csv
 ```
 
-Output columns:
+`entry_id` is the integration configuration entry ID. `output_path` must be writable by Home Assistant.
+
+The exported CSV contains:
 
 ```csv
 date,fajr,dhuhr,asr,maghrib,isha
 ```
 
-If your timetable uses `Zuhr` instead of `Dhuhr`, the script normalises it to `dhuhr`.
+## Troubleshooting
 
-## Notes
+### The PDF file could not be found
 
-PDF timetables vary a lot. This script first tries structured PDF tables, then falls back to text lines. It works best when each row contains a date or day number followed by the five prayer times.
+Use **Upload PDF**, or provide a path visible inside the Home Assistant runtime. `/home/...` paths on a host are usually not valid in a Home Assistant container; use `/config/...` or configure a volume mount.
 
-Useful options:
+### Could not parse prayer rows
+
+PDF timetables differ substantially. The parser first tries tables, then text lines. It works best when each row includes a date or day number followed by five prayer times. Supply Year and Month when the timetable contains only day numbers.
+
+### Integration does not appear after installation
+
+Restart Home Assistant, then refresh the browser. HACS installs integrations under `custom_components`, but Home Assistant must restart to load them.
+
+### Enable debug logging
+
+Add the following to `configuration.yaml`, restart Home Assistant, then inspect the logs:
+
+```yaml
+logger:
+  logs:
+    custom_components.prayer_timetable: debug
+```
+
+## Standalone CLI
+
+This repository also includes a command-line extractor for local use:
 
 ```bash
 uv run prayer-extract timetable.pdf prayer-times.csv --year 2026 --month March
-uv run prayer-extract timetable.pdf prayer-times.csv --date-format '%d %B %Y'
-uv run prayer-extract timetable.pdf prayer-times.csv --debug
 ```
 
-Use `--year` and `--month` when the PDF rows only contain day numbers.
+## Support and contributing
 
-## Home Assistant Custom Integration
+Report problems and request features in the [issue tracker](https://github.com/haffi96/prayer-automate-ha/issues). Do not attach timetable PDFs containing personal or copyrighted material unless you have permission to share them.
 
-This repository also includes a custom integration in `custom_components/prayer_timetable`.
-
-Install it by copying `custom_components/prayer_timetable` into your Home Assistant `custom_components` directory, then restart Home Assistant.
-
-Add it from **Settings > Devices & services > Add integration > Prayer Timetable** and provide:
-
-- `Upload PDF`: upload a PDF directly from the browser; the integration stores it in `/config/prayer_timetable/`
-- `PDF path`: optional alternative for a PDF already available inside Home Assistant (for example `/config/prayer_timetable/oxford.pdf`)
-- `Year` and `Month`: optional, but useful when the PDF rows only contain day numbers
-- `Date format`: optional Python `strptime` format for unusual date formats
-
-The integration exposes timestamp sensors for `Fajr`, `Dhuhr`, `Asr`, `Maghrib`, and `Isha`, plus `Next prayer`, `Next prayer time`, and a diagnostic `Rows parsed` sensor.
-
-The existing PDF-to-CSV flow is available as the `prayer_timetable.export_csv` service. Pass the integration `entry_id` and an `output_path` on the Home Assistant host.
+This project is released under the [MIT License](LICENSE).

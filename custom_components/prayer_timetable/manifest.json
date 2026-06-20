@@ -1,11 +1,13 @@
 {
   "domain": "prayer_timetable",
   "name": "Prayer Timetable",
-  "codeowners": [],
+  "codeowners": ["@haffi96"],
   "config_flow": true,
   "dependencies": ["file_upload"],
-  "documentation": "https://github.com/custom-components/prayer_timetable",
+  "documentation": "https://github.com/haffi96/prayer-automate-ha",
+  "integration_type": "service",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/haffi96/prayer-automate-ha/issues",
   "requirements": ["pdfplumber>=0.11.4"],
   "version": "0.1.0"
 }
