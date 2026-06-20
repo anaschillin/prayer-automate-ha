@@ -3,9 +3,10 @@
     "step": {
       "user": {
         "title": "Prayer Timetable",
-        "description": "Load prayer times from a local PDF timetable.",
+        "description": "Upload a PDF from this device, or provide a path already available to Home Assistant. Uploaded PDFs are stored in /config/prayer_timetable/.",
         "data": {
           "name": "Name",
+          "pdf_upload": "Upload PDF",
           "pdf_path": "PDF path",
           "year": "Year",
           "month": "Month",
@@ -16,8 +17,11 @@
     "error": {
       "cannot_parse": "Could not parse prayer rows from the PDF.",
       "file_not_found": "The PDF file could not be found.",
+      "invalid_pdf": "The uploaded file must be a PDF.",
       "invalid_year": "Year must be a number.",
-      "invalid_month": "Month must be a number or English month name."
+      "invalid_month": "Month must be a number or English month name.",
+      "pdf_required": "Upload a PDF or enter a Home Assistant file path.",
+      "upload_failed": "The PDF upload could not be saved."
     },
     "abort": {
       "already_configured": "This PDF path is already configured."

@@ -38,7 +38,8 @@ Install it by copying `custom_components/prayer_timetable` into your Home Assist
 
 Add it from **Settings > Devices & services > Add integration > Prayer Timetable** and provide:
 
-- `PDF path`: path to the timetable PDF on the Home Assistant host
+- `Upload PDF`: upload a PDF directly from the browser; the integration stores it in `/config/prayer_timetable/`
+- `PDF path`: optional alternative for a PDF already available inside Home Assistant (for example `/config/prayer_timetable/oxford.pdf`)
 - `Year` and `Month`: optional, but useful when the PDF rows only contain day numbers
 - `Date format`: optional Python `strptime` format for unusual date formats
 
