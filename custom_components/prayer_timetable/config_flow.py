@@ -6,11 +6,11 @@ from pathlib import Path
 from typing import Any
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_MONTH, CONF_NAME, CONF_YEAR
+from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant
 import voluptuous as vol
 
-from .const import CONF_DATE_FORMAT, CONF_PDF_PATH, DOMAIN
+from .const import CONF_DATE_FORMAT, CONF_MONTH, CONF_PDF_PATH, CONF_YEAR, DOMAIN
 from .extract import extract_prayer_rows, month_number
 
 DEFAULT_NAME = "Prayer Timetable"
