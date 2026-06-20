@@ -3,7 +3,8 @@ description: Maghrib adhan on speaker
 triggers:
   - trigger: template
     value_template: >-
-      {% set maghrib_time = as_timestamp(states("sensor.maghrib_adhan")) |
+      {% set maghrib_time =
+      as_timestamp(states("sensor.prayer_timetable_maghrib")) |
       timestamp_custom("%H:%M", True) %}
             {% set time = states("sensor.time")  %}
             {{ time == maghrib_time }}
