@@ -60,6 +60,13 @@ class PrayerRow:
     asr: str
     maghrib: str
     isha: str
+    fajr_jamaat: str | None = None
+    dhuhr_jamaat: str | None = None
+    asr_jamaat: str | None = None
+    maghrib_jamaat: str | None = None
+    isha_jamaat: str | None = None
+    # Layout-aware rows already contain 24-hour local times.
+    normalized: bool = False
 
 
 def normalise_cell(value: object) -> str:
@@ -385,6 +392,24 @@ def extract_prayer_rows(
     if not pdf_path.exists():
         raise FileNotFoundError(pdf_path)
 
+    # Detect the 13-column monthly timetable before the generic parser.
+    # Do not silently fall back if this layout is detected but malformed.
+    from .layout_nuneaton import MONTH_HEADING, DAY_ROW, parse_pdf
+    with pdfplumber.open(pdf_path) as document:
+        layout_detected = any(
+            MONTH_HEADING.search(text) and any(DAY_ROW.match(line) for line in text.splitlines())
+            for page in document.pages
+            if (text := (page.extract_text(layout=True) or ''))
+        )
+    if layout_detected:
+        records = parse_pdf(pdf_path, year)
+        return [PrayerRow(
+            date.fromisoformat(record['date']),
+            *(record[name] for name in PRAYERS),
+            *(record[f'{name}_jamaat'] for name in PRAYERS),
+            normalized=True,
+        ) for record in records]
+
     if not year or not month:
         inferred_year, inferred_month = infer_period(pdf_path)
         year = year or inferred_year
@@ -403,7 +428,9 @@ def write_csv(rows: Sequence[PrayerRow], output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", newline="", encoding="utf-8") as output_file:
         writer = csv.writer(output_file)
-        writer.writerow(("date", *PRAYERS))
+        writer.writerow(("date", *PRAYERS, *(f"{name}_jamaat" for name in PRAYERS)))
         for row in rows:
             day = row.day.isoformat() if isinstance(row.day, date) else row.day
-            writer.writerow((day, *(output_time(getattr(row, prayer), prayer) for prayer in PRAYERS)))
+            writer.writerow((day,
+                *(getattr(row, prayer) if row.normalized else output_time(getattr(row, prayer), prayer) for prayer in PRAYERS),
+                *(getattr(row, f"{prayer}_jamaat") or "" for prayer in PRAYERS)))

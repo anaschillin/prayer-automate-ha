@@ -29,14 +29,51 @@
   },
   "entity": {
     "sensor": {
-      "fajr": {"name": "Fajr"},
-      "dhuhr": {"name": "Dhuhr"},
-      "asr": {"name": "Asr"},
-      "maghrib": {"name": "Maghrib"},
-      "isha": {"name": "Isha"},
-      "next_prayer": {"name": "Next prayer"},
-      "next_prayer_time": {"name": "Next prayer time"},
-      "row_count": {"name": "Rows parsed"}
+      "fajr": {
+        "name": "Fajr"
+      },
+      "dhuhr": {
+        "name": "Dhuhr"
+      },
+      "asr": {
+        "name": "Asr"
+      },
+      "maghrib": {
+        "name": "Maghrib"
+      },
+      "isha": {
+        "name": "Isha"
+      },
+      "next_prayer": {
+        "name": "Next prayer"
+      },
+      "next_prayer_time": {
+        "name": "Next prayer time"
+      },
+      "row_count": {
+        "name": "Rows parsed"
+      },
+      "fajr_jamaat": {
+        "name": "Fajr Jamaat"
+      },
+      "dhuhr_jamaat": {
+        "name": "Dhuhr Jamaat"
+      },
+      "asr_jamaat": {
+        "name": "Asr Jamaat"
+      },
+      "maghrib_jamaat": {
+        "name": "Maghrib Jamaat"
+      },
+      "isha_jamaat": {
+        "name": "Isha Jamaat"
+      },
+      "next_jamaat": {
+        "name": "Next Jamaat"
+      },
+      "next_jamaat_time": {
+        "name": "Next Jamaat time"
+      }
     }
   }
 }

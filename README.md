@@ -104,3 +104,20 @@ uv run prayer-extract timetable.pdf prayer-times.csv --year 2026 --month March
 Report problems and request features in the [issue tracker](https://github.com/haffi96/prayer-automate-ha/issues). Do not attach timetable PDFs containing personal or copyrighted material unless you have permission to share them.
 
 This project is released under the [MIT License](LICENSE).
+
+
+## Layout-aware monthly timetables (v0.2.0)
+
+Nuneaton Muslim Society's 13-column monthly PDF format is automatically detected.
+Each dated row provides **Beginning Times** (`fajr`, `dhuhr`, `asr`, `maghrib`, `isha`)
+and **Jamaat Times** (`fajr_jamaat`, `dhuhr_jamaat`, `asr_jamaat`, `maghrib_jamaat`, `isha_jamaat`).
+Quotation marks in Jamaat columns repeat the previous day's value. The original generic
+PDF parser is retained for other layouts; those PDFs do not provide Jamaat values.
+
+The integration adds five Jamaat timestamp sensors, `next_jamaat` and `next_jamaat_time`.
+Existing beginning-time sensor unique IDs are unchanged. Both next-event calculations
+include the following day and update every minute. Parsed rows are cached until the PDF changes.
+
+CSV export includes the original columns plus five Jamaat columns (blank when unavailable).
+The Nuneaton layout parser prefers `pdftotext -layout` when installed and otherwise uses
+`pdfplumber`'s layout extraction. Verify the CSV after uploading a new PDF.

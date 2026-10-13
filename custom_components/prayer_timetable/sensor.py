@@ -31,6 +31,11 @@ PRAYER_DESCRIPTIONS = tuple(
         prayer=prayer,
     )
     for prayer in PRAYERS
+) + tuple(
+    PrayerSensorEntityDescription(
+        key=f"{prayer}_jamaat", translation_key=f"{prayer}_jamaat",
+        device_class=SensorDeviceClass.TIMESTAMP, prayer=f"{prayer}_jamaat",
+    ) for prayer in PRAYERS
 )
 
 EXTRA_DESCRIPTIONS = (
@@ -38,6 +43,11 @@ EXTRA_DESCRIPTIONS = (
     PrayerSensorEntityDescription(
         key="next_prayer_time",
         translation_key="next_prayer_time",
+        device_class=SensorDeviceClass.TIMESTAMP,
+    ),
+    PrayerSensorEntityDescription(key="next_jamaat", translation_key="next_jamaat"),
+    PrayerSensorEntityDescription(
+        key="next_jamaat_time", translation_key="next_jamaat_time",
         device_class=SensorDeviceClass.TIMESTAMP,
     ),
     PrayerSensorEntityDescription(
@@ -91,11 +101,18 @@ class PrayerTimetableSensor(CoordinatorEntity[PrayerTimetableCoordinator], Senso
             return None
 
         if self.entity_description.prayer:
-            return data.prayer_datetimes.get(self.entity_description.prayer)
+            prayer = self.entity_description.prayer
+            if prayer.endswith("_jamaat"):
+                return data.jamaat_datetimes.get(prayer.removesuffix("_jamaat"))
+            return data.prayer_datetimes.get(prayer)
         if self.entity_description.key == "next_prayer":
             return data.next_prayer
         if self.entity_description.key == "next_prayer_time":
             return data.next_prayer_time
+        if self.entity_description.key == "next_jamaat":
+            return data.next_jamaat
+        if self.entity_description.key == "next_jamaat_time":
+            return data.next_jamaat_time
         if self.entity_description.key == "row_count":
             return data.row_count
         return None
