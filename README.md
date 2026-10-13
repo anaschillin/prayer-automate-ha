@@ -14,10 +14,10 @@ Prayer Timetable is a custom Home Assistant integration that extracts daily Fajr
 
 ### HACS (recommended)
 
-[![Open this repository in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=haffi96&repository=prayer-automate-ha&category=integration)
+[![Open this repository in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=anaschillin&repository=prayer-automate-ha&category=integration)
 
 1. Open **HACS** in Home Assistant.
-2. Open the three-dot menu, select **Custom repositories**, and add `https://github.com/haffi96/prayer-automate-ha` as an **Integration**.
+2. Open the three-dot menu, select **Custom repositories**, and add `https://github.com/anaschillin/prayer-automate-ha` as an **Integration**.
 3. Search for **Prayer Timetable** and select **Download**.
 4. Restart Home Assistant.
 
